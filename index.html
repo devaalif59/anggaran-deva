@@ -1,0 +1,108 @@
+from zipfile import ZipFile
+from pathlib import Path
+
+# Create the HTML content
+html_content = """
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Anggaran HUT RI</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: red;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    canvas {
+      max-width: 100%;
+    }
+
+    .description {
+      margin-top: 20px;
+      line-height: 1.6;
+    }
+
+    .percentage-labels {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 18px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Anggaran HUT RI ke-79</h1>
+
+    <canvas id="anggaranChart"></canvas>
+
+    <div class="percentage-labels">
+      📊 50% untuk Acara Hiburan<br>
+      🎪 75% untuk Dekorasi & Panggung<br>
+      🎁 12% untuk Hadiah & Doorprize
+    </div>
+
+    <div class="description">
+      <p>
+        Dalam rangka menyambut Hari Ulang Tahun Republik Indonesia ke-79, alokasi anggaran dilakukan secara strategis untuk mendukung kelancaran acara. Sebagian besar dana difokuskan pada hiburan rakyat seperti konser, lomba tradisional, dan parade. 
+        Selain itu, dekorasi lingkungan dan perlengkapan panggung juga menyerap sebagian besar anggaran untuk menciptakan suasana meriah dan nasionalis.
+        Hadiah dan doorprize untuk para peserta lomba juga menjadi bagian penting dalam membangkitkan semangat kebersamaan.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const ctx = document.getElementById('anggaranChart').getContext('2d');
+    const anggaranChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Acara Hiburan', 'Dekorasi & Panggung', 'Hadiah & Doorprize'],
+        datasets: [{
+          data: [50, 75, 12],
+          backgroundColor: ['#f94144', '#f3722c', '#f9c74f'],
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'bottom',
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+"""
+
+# Save the HTML to a file
+output_dir = Path("/mnt/data/anggaran_hut_ri")
+output_dir.mkdir(parents=True, exist_ok=True)
+html_path = output_dir / "index.html"
+html_path.write_text(html_content, encoding="utf-8")
+
+# Create a zip file
+zip_path = Path("/mnt/data/anggaran_hut_ri.zip")
+with ZipFile(zip_path, "w") as zipf:
+    zipf.write(html_path, arcname="index.html")
+
+zip_path.name  # Return the zip file name for download
